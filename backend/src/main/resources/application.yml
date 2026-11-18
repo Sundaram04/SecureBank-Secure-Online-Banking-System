@@ -1,0 +1,63 @@
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 30m
+      cookie:
+        name: SECUREBANKSESSIONID
+        http-only: true
+        secure: false # set to true when running over HTTPS
+        same-site: lax
+        path: /
+
+spring:
+  application:
+    name: securebank-backend
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/securebank_db}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 10000
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+        show_sql: false
+    open-in-view: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+# Application Security Configuration
+securebank:
+  security:
+    aes:
+      # 256-bit AES master key in hex (64 hex characters) - for demonstration & local dev
+      secret-key: ${SECUREBANK_AES_SECRET_KEY:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef}
+    auth:
+      max-failed-attempts: 5
+      lockout-duration-minutes: 15
+      password-reset-token-validity-minutes: 30
+      session-inactivity-timeout-minutes: 30
+    cors:
+      allowed-origins: ${SECUREBANK_CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173}
+    transfer:
+      max-per-transfer-amount: 100000.00
+      daily-limit-amount: 500000.00
+      suspicious-amount-threshold: 50000.00
+      velocity-window-minutes: 10
+      velocity-max-transfers: 5
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

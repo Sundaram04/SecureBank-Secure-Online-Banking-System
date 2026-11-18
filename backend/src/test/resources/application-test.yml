@@ -1,0 +1,42 @@
+server:
+  port: 0
+  servlet:
+    session:
+      cookie:
+        name: SECUREBANKSESSIONID
+        http-only: true
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:securebank_test;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: false
+        show_sql: false
+    open-in-view: false
+  flyway:
+    enabled: false
+
+securebank:
+  security:
+    aes:
+      secret-key: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+    auth:
+      max-failed-attempts: 5
+      lockout-duration-minutes: 15
+      password-reset-token-validity-minutes: 30
+    cors:
+      allowed-origins: http://localhost:5173
+    transfer:
+      max-per-transfer-amount: 100000.00
+      daily-limit-amount: 500000.00
+      suspicious-amount-threshold: 50000.00
+      velocity-window-minutes: 10
+      velocity-max-transfers: 5

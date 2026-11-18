@@ -1,0 +1,32 @@
+﻿# Environment secrets
+.env
+.env.*
+!.env.example
+application-local.properties
+
+# Java / Maven
+target/
+*.class
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local database backups
+*.sql
+*.dump
